@@ -18,7 +18,9 @@ export default function Header(props) {
   const handleSubmit = (e) => {
     e.preventDefault()
     //Store user value in search bar
-    const userInput = document.querySelector('input.search').value.toLowerCase()
+        debugger;
+
+    const userInput = e.target.value.toLowerCase()
 
     //check if user input is valid name 
     if(constNames.find(el => el.toLowerCase() === userInput)) {
@@ -33,7 +35,8 @@ export default function Header(props) {
   //Change list items as user types
   const handleChange = (e) => {
     e.preventDefault()
-    const userInput = document.querySelector('input.search').value.toLowerCase()
+    //debugger;
+    const userInput = e.target.value.toLowerCase()
     
     //When user begins to type generate a new list view with options that match user input
     generateNamesList(userInput)
@@ -42,8 +45,8 @@ export default function Header(props) {
   const generateNamesList = (userInput) => {
     if(userInput === '' || !userInput) {
       setTempNames(constNames)
-    }else {
-      setTempNames(constNames.filter(name => name.toLowerCase().startsWith(userInput)))
+    } else {
+      setTempNames(constNames.filter(name => name.name.toLowerCase().startsWith(userInput)))
     }
   }
 
@@ -70,6 +73,7 @@ export default function Header(props) {
 
   return (  
     <div className="header">
+      <div className='center'>
       <img src={HeaderLogo} alt="" className="logo"/>
       <p className="subtitle">Get to know more about your cat breed</p>
         <form action="" className="search" onSubmit={handleSubmit}>
@@ -79,7 +83,8 @@ export default function Header(props) {
           onChange={handleChange} 
           placeholder="Search" 
           onFocus={handleFocus} 
-          onBlur={handleFocus}/>
+            onBlur={handleFocus} />
+         
 
           <div className="names-list hidden">
             <ul className="names-list hidden">
@@ -91,6 +96,7 @@ export default function Header(props) {
             </ul>
           </div>
         </form>
+         </div>
     </div>
   )
 }
