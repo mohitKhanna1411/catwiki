@@ -1,28 +1,27 @@
-const axios = require("axios");
+const getBreedInfoByBreedId = require("../services/getBreedInfoByBreedId");
+const getBreedPhotosByBreedId = require("../services/getBreedPhotosByBreedId");
 
 
 let getTop10 = async (req, res) => {
     try {
-        const r = await axios.get('https://api.thecatapi.com/v1/breeds')
+        const r = await getBreedInfoByBreedId();
 
         // filtering out first 10 records
-        const data = r.data.slice(0, 10)
+        const top10 = r.data.slice(0, 10)
 
         const response = []
 
-        for (i = 0; i < data.length; i++) {
-            const r = await axios.get(`https://api.thecatapi.com/v1/images/search?limit=1&breed_id=${data[i].id}`)
+        for (i = 0; i < top10.length; i++) {
+            const r = await getBreedPhotosByBreedId(1, top10[i].id)
 
-            console.log(r);
             const breedInfo = {
-                id: data[i].id,
-                name: data[i].name,
-                description: data[i].description,
+                id: top10[i].id,
+                name: top10[i].name,
+                description: top10[i].description,
                 photo_url: r.data[0].url,
             }
             response.push(breedInfo)
         }
-        console.log(response);
         res.status(200).send(response)
     } catch (err) { console.log(err) }
 }

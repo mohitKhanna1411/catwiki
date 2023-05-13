@@ -1,12 +1,14 @@
-const axios = require("axios");
 const isEmpty = require('../helpers/helper');
+const getBreedInfoByBreedId = require('../services/getBreedInfoByBreedId');
+const getBreedPhotosByBreedId = require("../services/getBreedPhotosByBreedId");
 
 let getBreedById = async (req, res) => {
 
     const breedName = req.params.name
 
-    const r = await axios.get(`https://api.thecatapi.com/v1/breeds/${breedName}`)
+    const r = await getBreedInfoByBreedId(breedName)
     const obj = r.data;
+    console.log(obj)
     if (isEmpty(obj)) {
         res.status(404).send("Not Found")
     } else {
@@ -30,13 +32,12 @@ let getBreedById = async (req, res) => {
         }
 
         //Get breed ID in order to fetch photos
-        const breedID = breedInfo.id
+        const breedId = breedInfo.id
 
-        //Send request to Cat API for 8 photos maximum (MAY SEND LESS)
-        const photoObj = await axios.get(`https://api.thecatapi.com/v1/images/search?limit=8&breed_id=${breedID}`)
+        const photosObj = await getBreedPhotosByBreedId(8, breedId);
 
         //Extract photos from object and store into breedInfo obj
-        breedInfo.photos = photoObj.data.map(obj => obj.url)
+        breedInfo.photos = photosObj.data.map(obj => obj.url)
 
         //Send entire breedInfo object back 
         res.status(200).send(breedInfo)

@@ -1,9 +1,9 @@
-const axios = require("axios");
-
+const getBreedInfoByBreedId = require('../services/getBreedInfoByBreedId')
 
 let getBreeds = async (req, res) => {
-    const response = await axios.get('https://api.thecatapi.com/v1/breeds')
-    const names = response.data.map(breed => ({ name: breed.name, id: breed.id }))
+
+    const r = await getBreedInfoByBreedId();
+    const names = r.data.map(breed => ({ name: breed.name, id: breed.id }))
     res.status(200).send({ names })
 }
 
